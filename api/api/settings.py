@@ -11,8 +11,8 @@ DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 
 # Hosts and CSRF
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ".fly.dev,localhost,127.0.0.1").split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://*.fly.dev,http://localhost:8000").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000").split(",")
 
 
 INSTALLED_APPS = [
@@ -79,12 +79,9 @@ TEMPLATES = [
 WSGI_APPLICATION = "api.wsgi.application"
 
 db_url = os.getenv("DATABASE_URL", "sqlite:///" + str(BASE_DIR / "db.sqlite3"))
-ssl_req = not DEBUG
-if (".flycast" in db_url) or (".internal" in db_url):
-    ssl_req = False
 
 DATABASES = {
-    "default": dj_database_url.parse(db_url, conn_max_age=600, ssl_require=ssl_req)
+    "default": dj_database_url.parse(db_url, conn_max_age=600, ssl_require=False)
 }
 
 

@@ -3,10 +3,16 @@ import Constants from "expo-constants";
 import { getAccess, getRefresh, saveTokens } from "../auth/tokens";
 
 const baseURL = (Constants.expoConfig?.extra as any)?.API_URL || process.env.EXPO_PUBLIC_API_URL;
-export const api = axios.create({ baseURL });
+export const api = axios.create({ 
+  baseURL,
+  timeout: 10000, // 10 second timeout
+});
 
 let refreshing: Promise<string | null> | null = null;
-console.log("API baseURL =", baseURL);
+console.log("=== API Client Configuration ===");
+console.log("Constants.expoConfig?.extra:", Constants.expoConfig?.extra);
+console.log("process.env.EXPO_PUBLIC_API_URL:", process.env.EXPO_PUBLIC_API_URL);
+console.log("Final API baseURL =", baseURL);
 
 async function refreshAccess(): Promise<string | null> {
   if (refreshing) return refreshing;

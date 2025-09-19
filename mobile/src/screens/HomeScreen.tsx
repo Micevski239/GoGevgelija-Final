@@ -17,10 +17,10 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AppHeader from '../components/AppHeader';
 import { useBackgroundColor } from '../contexts/BackgroundContext';
-import FeaturedOverlay from '../screens/overlay/FeaturedOverlay';
-import UpcomingEventsOverlay from '../screens/overlay/UpcomingEventsOverlay';
-import PromotionsOverlay from '../screens/overlay/PromotionsOverlay';
-import BlogOverlay from '../screens/overlay/BlogOverlay';
+import FeaturedOverlay from './overlay/FeaturedOverlay';
+import UpcomingEventsOverlay from './overlay/UpcomingEventsOverlay';
+import PromotionsOverlay from './overlay/PromotionsOverlay';
+import BlogOverlay from './overlay/BlogOverlay';
 import { api } from '../api/client';
 
 const { width } = Dimensions.get('window');
@@ -232,12 +232,21 @@ export default function HomeScreen({ signOut }: HomeScreenProps) {
     const fetchFeaturedListings = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get('/api/listings/featured/');
+        console.log('Fetching featured listings...');
+        
+        const response = await fetch('https://gogevgelija-api.fly.dev/api/listings/featured/');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Featured listings loaded:', data.length, 'items');
         setFeaturedListings(data);
         
         // Prefetch images
         data.forEach((listing: Listing) => RNImage.prefetch(listing.image).catch(() => {}));
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching featured listings:', error);
       } finally {
         setLoading(false);
