@@ -18,4 +18,5 @@ COPY . /app
 ENV PORT=8080
 EXPOSE 8080
 
-CMD gunicorn api.wsgi:application --bind 0.0.0.0:${PORT} --workers 3 --timeout 60
+CMD gunicorn api.wsgi:application --chdir /app/api --bind 0.0.0.0:${PORT} --workers 3 --timeout 60
+
